@@ -1,0 +1,56 @@
+---
+layout: runbook
+title: '#4471 · three problems, one ticket'
+owner: Pierre-Arnaud Galiana
+status: proposed
+reviewed: 2026-10-29
+signature: 'v1.eyJzdWIiOiIyMTE4IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMyNTAxMjUsImV4cCI6MTc5MzMzNjUyNX0.ZSyAsAphK65d2Py1wKt4I-SbDKo4mGomTXY_NR2MQLM'
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import CauseTable from '#lib/kb/CauseTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+The [#4471 page](/kb/incidents/4471) says one issue, one fix queued. The reports say otherwise.
+They were merged because their subjects matched ([decision 0001](/kb/decisions/0001-dedupe-by-subject)),
+and a matching subject only tells you the date was wrong, not why.
+
+<Callout kind="warn">
+The queued parser fix closes only the first row below. The other two need their own fixes,
+so the reports behind them will keep coming after it ships.
+</Callout>
+
+## What #4471 holds
+
+<ProblemTable ticket={4471} repo="mrpia/mega-dev-s01e03-what-it-shows" issues={{ parser: 1, hint: 2, 'one-day': 3 }} />
+
+**parser.** The shared parser reads every date month first, and every tenant on this ticket writes
+the day first. 7 April becomes 4 July. This is the bug the ticket was named after, and most of the queue.
+
+**hint.** Tenants on `booking-v3` print `MM/DD/YYYY` under the date field. Their customers do as told,
+and the form then reads the value day first. Same symptom, different code: only form reports from
+alder.physio, copper.studio and pale.harbour. The same tenants' app and email reports are the parser bug.
+
+**one-day.** A handful of reports are not a swap at all. Tuesday 12 May shows as Monday 11 May, a
+meeting lands on different days in Lisbon and Toronto, an invite arrives before the booking was made.
+The desk already listed them as a one-day move in `desk-notes.json`. A date-only value is going
+through a time zone somewhere. The table counts them here, under their own ticket.
+
+## How the desk's own view files them
+
+`CauseTable` files by tenant, so the one-day moves sit under `parser` and only get a footnote.
+The row it marks as "no ticket of its own" now has one.
+
+<CauseTable ticket={4471} />
+
+## For triage
+
+- Intake's tag is a guess from the reporter's browser. It was wrong for a good share of this ticket.
+  Use the tenant's locale and form (`causeOf` in `causes.ts`), and the channel.
+- A report that names two dates which are not a day/month swap is not this ticket's main bug. Read the body.
+- The export pages overlap. Count unique report ids, never rows.
+
+<RenderStamp {signature} />
