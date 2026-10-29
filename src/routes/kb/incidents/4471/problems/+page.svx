@@ -37,7 +37,8 @@ alder.physio, copper.studio and pale.harbour. The same tenants' app and email re
 **one-day.** A handful of reports are not a swap at all. Tuesday 12 May shows as Monday 11 May, a
 meeting lands on different days in Lisbon and Toronto, an invite arrives before the booking was made.
 The desk already listed them as a one-day move in `desk-notes.json`. A date-only value is going
-through a time zone somewhere. The table counts them here, under their own ticket.
+through a time zone somewhere. The table counts them the desk's way, under `parser` where they are
+filed, and gives them their own row and ticket, so the rows add up to more than the ticket.
 
 ## How the desk's own view files them
 

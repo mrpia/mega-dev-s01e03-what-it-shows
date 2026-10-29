@@ -29,8 +29,8 @@
     {#each split.rows as r (r.problem)}
       <tr>
         <td><code>{r.problem}</code> {LABEL[r.problem]}</td>
-        <td>{r.reports}</td>
-        <td>{r.problem === 'one-day' ? '—' : r.taggedRight}</td>
+        <td>{r.reports}{#if r.alsoIn}<br /><small>also in <code>{r.alsoIn}</code></small>{/if}</td>
+        <td>{r.taggedRight ?? '—'}</td>
         <td>{r.tenants}</td>
         <td>{r.firstSeen} → {r.lastSeen}</td>
         <td>
